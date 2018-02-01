@@ -155,7 +155,7 @@ contract hackOthers {
 
 contract getMoney{
     //address ct_addr = 0xAEc6E567C38746cAeDCB55a5A007704E69e00c70;
-    address ct_addr = 0x692a70d2e424a56d2c6c27aa97d1a86395877b3a;
+    address ct_addr = 0x2b44b4ab8f15dc9d77f14a9daf6bb797ecce1cb3;
     uint count = 0;
     uint limit = 1;
     
