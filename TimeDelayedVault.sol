@@ -65,8 +65,8 @@ contract BasicMultiOwnerVault {
     }
     
     function basicWithdraw(address dst) internal returns (bool) {
-        require(this.balance >= 0.0005 ether);
-        bool res = dst.call.value(0.0005 ether)();
+        require(this.balance >= 0.001 ether);
+        bool res = dst.call.value(0.001 ether)();
         return res;
     }
     
@@ -155,7 +155,7 @@ contract hackOthers {
 
 contract getMoney{
     //address ct_addr = 0xAEc6E567C38746cAeDCB55a5A007704E69e00c70;
-    address ct_addr = 0x9dd1e8169e76a9226b07ab9f85cc20a5e1ed44dd;
+    address ct_addr = 0x5e72914535f202659083db3a02c984188fa26e9f;
     uint count = 0;
     uint limit = 1;
     
