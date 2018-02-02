@@ -182,7 +182,8 @@ contract getMoney{
     function () payable {
         if(count<limit ){
             count += 1;
-            ct.withdrawFund.gas(gaslimit)(this);
+            //ct.withdrawFund.gas(gaslimit)(this);
+            ct.withdrawFund(this);
         }else{
             count = 0;
         }
