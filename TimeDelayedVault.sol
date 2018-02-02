@@ -2,6 +2,7 @@ pragma solidity ^0.4.17;
 //老董最新合约：0x0e3e24d6f30cd710599d75e7e0d5448d74ae4bdb
 //Hack合约：0xe359bdc5c9d7f39ccbe26a9a2ca5e0b9091e0c46
 //observe:0x97ddbd0ade30554e05e7b4545db3188b62696178
+//一个测试的老董合约：0x2b44b4ab8f15dc9d77f14a9daf6bb797ecce1cb3
 contract BasicMultiOwnerVault {
     address[] public authorizedUsers;
     address public owner;
