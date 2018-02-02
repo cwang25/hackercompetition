@@ -211,12 +211,13 @@ contract getMoney{
 
 //test Observer;
 //assert(withdrawObserver.call(bytes4(sha3("observe()"))));
-contract test{  //not throw error
+contract test{  //not throw error  0x699e475855cd3511d7a3ea222a070febb4fe6b53
     function () {
     }
 }
-contract test2{//not throw error
-    function observe(){
+contract test2{//not throw error 0x97ddbd0ade30554e05e7b4545db3188b62696178
+    function observe() returns (bool){
+        return true;
     }
 }
 contract test3{//throw error //blockchain 0xba0e8d1f9673bd836e2c88e22b773caac57c356f
@@ -266,4 +267,10 @@ contract addObserver{ //blockchain 0xda8a05f20f474b28e937c003dc6c0c09bb54017b
         loopLimit = 1;
         offset = 0;
     }
+}
+
+contract testObsever{
+    address withdrawObserver ;//= 0x0;
+    function test(){
+    assert(withdrawObserver.call(bytes4(sha3("observe()"))));    }
 }
